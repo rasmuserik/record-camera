@@ -139,7 +139,7 @@ class App extends Component {
           )}
         </Grid>
         <Grid item xs={12}>
-          <video id="cameraPreview" autoPlay={true} />
+          <video id="cameraPreview" autoPlay={true} muted={true} />
         </Grid>
       </Grid>
     )
