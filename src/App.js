@@ -42,7 +42,11 @@ class App extends Component {
     this.state.prevAudio = this.state.audioDevice
     console.log("here2")
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
+      audio: this.state.audioDevice
+        ? {
+            deviceId: { exact: this.state.audioDevice }
+          }
+        : false,
       video: this.state.videoDevice
         ? {
             deviceId: { exact: this.state.videoDevice }
@@ -96,7 +100,7 @@ class App extends Component {
           </RadioGroup>
         </Grid>
         <Grid item xs={2}>
-          <a id="dllink" style={{ display: "none" }} />
+          <a id="dllink" target="_blank" style={{ display: "none" }} />
           {this.state.recording ? (
             <Button
               onClick={() => {
@@ -110,7 +114,7 @@ class App extends Component {
                   a.href = url
                   //a.download = filename
                   a.click()
-                  window.URL.revokeObjectURL(url)
+                  //window.URL.revokeObjectURL(url)
                 })
               }}
             >
@@ -119,9 +123,15 @@ class App extends Component {
           ) : (
             <Button
               onClick={() => {
-                const recorder = RecordRTC(this.state.stream, {})
-                recorder.startRecording()
-                this.setState({ recording: true, recorder })
+                try {
+                  const recorder = RecordRTC(this.state.stream, {
+                    recorderType: RecordRTC.WebAssemblyRecorder
+                  })
+                  recorder.startRecording()
+                  this.setState({ recording: true, recorder })
+                } catch (e) {
+                  alert(e.toString())
+                }
               }}
             >
               record
