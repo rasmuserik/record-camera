@@ -1,0 +1,53 @@
+{
+  "name": "record-camera",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Rasmus Erik Voel Jensen (rasmuserik.com)",
+  "homepage": "https://record-camera.solsort.com",
+  "lint-staged": {
+    "*.{js,jsx,md,json,css}": [
+      "prettier --no-semi --write",
+      "git add"
+    ]
+  },
+  "pre-commit": [
+    "prettier"
+  ],
+  "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/styles": "^3.0.0-alpha.10",
+    "@mdi/js": "^3.6.95",
+    "gh-pages": "^2.0.1",
+    "immutable": "^4.0.0-rc.12",
+    "jss": "^9.8.7",
+    "lodash": "^4.17.11",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-jss": "^8.6.1",
+    "react-markdown": "^4.0.8",
+    "react-redux": "^7.0.2",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "typeface-roboto": "0.0.54"
+  },
+  "devDependencies": {
+    "react-scripts": "3.0.0",
+    "lint-staged": "^8.1.5",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.17.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "prettier": "lint-staged",
+    "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
