@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography"
 import Grid from "@material-ui/core/Grid"
 import RecordRTC from "recordrtc"
 import { promisify } from "util"
+import { saveAs } from "file-saver"
 
 const styles = theme => ({
   button: {
@@ -19,6 +20,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 class App extends Component {
   state = {
+    status: "",
     videoDevice: "",
     audioDevice: "",
     stream: undefined,
@@ -30,7 +32,6 @@ class App extends Component {
   }
 
   async startCamera() {
-    console.log("here1")
     // setup camera
     if (
       this.state.prevVideo === this.state.videoDevice &&
@@ -40,7 +41,6 @@ class App extends Component {
     }
     this.state.prevVideo = this.state.videoDevice
     this.state.prevAudio = this.state.audioDevice
-    console.log("here2")
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: this.state.audioDevice
         ? {
@@ -105,9 +105,16 @@ class App extends Component {
             <Button
               onClick={() => {
                 this.state.recorder.stopRecording(async o => {
-                  console.log(o)
                   this.setState({ recording: false })
                   let blob = await this.state.recorder.getBlob()
+                  this.setState({
+                    status: `created "${blob.type}" blob of "${
+                      blob.size
+                    }" bytes`
+                  })
+                  saveAs(blob)
+
+                  /*
                   console.log("here", blob)
                   const url = window.URL.createObjectURL(blob)
                   const a = document.getElementById("dllink")
@@ -115,6 +122,7 @@ class App extends Component {
                   //a.download = filename
                   a.click()
                   //window.URL.revokeObjectURL(url)
+                  */
                 })
               }}
             >
@@ -124,9 +132,7 @@ class App extends Component {
             <Button
               onClick={() => {
                 try {
-                  const recorder = RecordRTC(this.state.stream, {
-                    recorderType: RecordRTC.WebAssemblyRecorder
-                  })
+                  const recorder = RecordRTC(this.state.stream, {})
                   recorder.startRecording()
                   this.setState({ recording: true, recorder })
                 } catch (e) {
@@ -139,7 +145,13 @@ class App extends Component {
           )}
         </Grid>
         <Grid item xs={12}>
+          {this.state.status}
+        </Grid>
+        <Grid item xs={12}>
           <video id="cameraPreview" autoPlay={true} muted={true} />
+        </Grid>
+        <Grid item xs={12}>
+          <input type="file" accept="video/*" capture="capture" />
         </Grid>
       </Grid>
     )
